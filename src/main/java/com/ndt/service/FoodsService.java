@@ -15,4 +15,5 @@ import java.util.Map;
 public interface FoodsService {
     List<Foods> getFood (Map<String, String> params, int page);
     int countFood();
+    boolean addFood(Foods f);
 }

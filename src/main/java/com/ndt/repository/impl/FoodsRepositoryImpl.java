@@ -28,7 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Repository
 @Transactional
-@PropertySource("classpath:messages.properties")
+@PropertySource("classpath:databases.properties")
 public class FoodsRepositoryImpl implements FoodsRepository {
     @Autowired
     private LocalSessionFactoryBean sessionFactory;
@@ -97,5 +97,24 @@ public class FoodsRepositoryImpl implements FoodsRepository {
         Query q = session.createQuery("SELECT COUNT(*) FROM Foods");
         
         return Integer.parseInt(q.getSingleResult().toString());
+    }
+
+    @Override
+    public boolean addFood(Foods f) {
+        Session session = this.sessionFactory.getObject().getCurrentSession();
+        
+        try {
+            session.save(f);
+            return true;
+        } catch (Exception ex) {
+            System.err.println("Thêm thất bại" + ex.getMessage());
+            ex.printStackTrace();
+            return false;
+        }
+    }
+
+    @Override
+    public boolean deleteFood(Foods f) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 }

@@ -27,7 +27,14 @@
     <c:forEach items="${foods}" var="f">
         <div class="col-md-3 col-xs-12" style="padding: 5px;">
             <div class="card">
-                <img class="card-img-top" class="img-fluid" src="https://res.cloudinary.com/ndt1010/image/upload/v1661336253/cld-sample-4.jpg" alt="Card image">
+                <c:if test="${f.imgFood != null && f.imgFood.startsWith('https') == true}">
+                    <img class="card-img-top" class="img-fluid" src="<c:url value="${f.imgFood}"/>" alt="Card image">
+                </c:if>
+                    
+                <c:if test="${f.imgFood == null || f.imgFood.startsWith('https') == false}">
+                    <img class="card-img-top" class="img-fluid" src="https://res.cloudinary.com/ndt1010/image/upload/v1661336253/cld-sample-4.jpg" alt="Card image">
+                </c:if>
+
                 <div class="card-body">
                     <h4 class="card-title">${f.name}</h4>
                     <p class="card-text">

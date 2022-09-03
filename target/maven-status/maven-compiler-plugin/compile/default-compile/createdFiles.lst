@@ -1,5 +1,6 @@
 com\ndt\pojo\ConditionDetails_.class
 com\ndt\repository\CategoryRepository.class
+com\ndt\formatters\CategoryFormatter.class
 com\ndt\pojo\Orders_.class
 com\ndt\pojo\Stores.class
 com\ndt\service\CategoryService.class
