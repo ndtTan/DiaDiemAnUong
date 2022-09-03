@@ -4,6 +4,7 @@
  */
 package com.ndt.repository.impl;
 
+import com.ndt.pojo.Category;
 import com.ndt.pojo.Foods;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +39,6 @@ public class FoodsRepositoryImpl implements FoodsRepository {
     @Override
     public List<Foods> getFood(Map<String, String> params, int page) {
         Session session = this.sessionFactory.getObject().getCurrentSession();
-
         CriteriaBuilder b = session.getCriteriaBuilder();
         CriteriaQuery<Foods> q = b.createQuery(Foods.class);
         Root root = q.from(Foods.class);
@@ -114,7 +114,34 @@ public class FoodsRepositoryImpl implements FoodsRepository {
     }
 
     @Override
-    public boolean deleteFood(Foods f) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public boolean deleteFood(int id) {
+        Session session = this.sessionFactory.getObject().getCurrentSession();
+
+        try {
+            Foods f = session.get(Foods.class, id);
+            session.delete(f);
+            return true;
+        } catch (Exception ex) {
+            System.err.println("Thêm thất bại" + ex.getMessage());
+            ex.printStackTrace();
+            return false;
+        }
+    }
+    
+    @Override
+    public List<Object[]> cateStats() {
+        Session session = this.sessionFactory.getObject().getCurrentSession();
+        CriteriaBuilder b = session.getCriteriaBuilder();
+        CriteriaQuery<Object[]> q = b.createQuery(Object[].class);
+        
+        Root rF = q.from(Foods.class);
+        Root rC = q.from(Category.class);
+        q.where(b.equal(rF.get("categoryId"), rC.get("id")));
+         
+        q.multiselect(rC.get("id"), rC.get("categoryName"), b.count(rF.get("id")));
+        q.groupBy(rC.get("id"));
+        
+        Query query = session.createQuery(q);
+        return query.getResultList();
     }
 }

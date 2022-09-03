@@ -48,4 +48,10 @@ public class FoodController {
         
         return "food";
     }
+    
+    @GetMapping("/cate-stats")
+    public String cateStats(Model model) {
+        model.addAttribute("stats", this.foodsService.cateStats());
+        return "cate-stats";
+    }
 }

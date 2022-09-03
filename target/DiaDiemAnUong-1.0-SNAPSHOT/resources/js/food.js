@@ -4,6 +4,19 @@
  */
 
 
+function deleteFood(endpoint, id) {
+    let d = document.getElementById("load" + id);
+    d.style.display = "block";
+    fetch(endpoint, {
+        method: "delete"
+    }).then(function(res) {
+        if (res.status === 204)
+            location.reload();
+    }).catch(function(err) { 
+        console.error(err);
+    });
+}
+
 function loadAdminFood(endpoint) {
     fetch(endpoint).then(function(res) {
         return res.json();
@@ -15,7 +28,10 @@ function loadAdminFood(endpoint) {
                     <td><img src="${data[i].imgFood}" width="120" /></td>
                     <td>${data[i].name}</td>
                     <td>${data[i].price} VND</td>
-                    <td><button class='btn btn-danger'>Xoa</button></td>
+                    <td>
+                        <div class="spinner-border text-dark" style="display:none" id="load${data[i].id}"></div>
+                        <button class='btn btn-danger' onClick="deleteFood('${endpoint + "/" + data[i].id}', ${data[i].id})">Xoa</button>
+                    </td>
                 </tr>`;
         }
         

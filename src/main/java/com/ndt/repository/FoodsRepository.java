@@ -16,5 +16,6 @@ public interface FoodsRepository {
     List<Foods> getFood (Map<String, String> params, int page);
     int countFood();
     boolean addFood(Foods f);
-    boolean deleteFood(Foods f);
+    boolean deleteFood(int id);
+    List<Object[]> cateStats();
 }

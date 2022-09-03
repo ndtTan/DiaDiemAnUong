@@ -47,7 +47,17 @@ public class FoodsServiceImpl implements FoodsService{
             } catch (IOException ex) {
                 System.err.println(ex.getMessage());
             }
-        
+         
             return false;
+    }
+
+    @Override
+    public boolean deleteFood(int id) {
+        return this.foodsRepository.deleteFood(id);
+    }
+
+    @Override
+    public List<Object[]> cateStats() {
+        return this.foodsRepository.cateStats();
     }
 }
