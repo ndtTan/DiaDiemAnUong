@@ -41,6 +41,9 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "User.findByUserRole", query = "SELECT u FROM User u WHERE u.userRole = :userRole")})
 public class User implements Serializable {
 
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "odUserId")
+    private List<Receipt> receiptList;
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -84,8 +87,6 @@ public class User implements Serializable {
     @Size(min = 1, max = 10)
     @Column(name = "user_role")
     private String userRole;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "receiveBy")
-    private List<Payment> paymentList;
 
     public User() {
     }
@@ -169,15 +170,6 @@ public class User implements Serializable {
         this.userRole = userRole;
     }
 
-    @XmlTransient
-    public List<Payment> getPaymentList() {
-        return paymentList;
-    }
-
-    public void setPaymentList(List<Payment> paymentList) {
-        this.paymentList = paymentList;
-    }
-
     @Override
     public int hashCode() {
         int hash = 0;
@@ -201,6 +193,15 @@ public class User implements Serializable {
     @Override
     public String toString() {
         return "com.ndt.pojo.User[ id=" + id + " ]";
+    }
+
+    @XmlTransient
+    public List<Receipt> getReceiptList() {
+        return receiptList;
+    }
+
+    public void setReceiptList(List<Receipt> receiptList) {
+        this.receiptList = receiptList;
     }
     
 }

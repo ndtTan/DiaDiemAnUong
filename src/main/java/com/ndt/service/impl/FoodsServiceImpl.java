@@ -10,6 +10,7 @@ import com.ndt.pojo.Foods;
 import com.ndt.repository.FoodsRepository;
 import com.ndt.service.FoodsService;
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,5 +60,10 @@ public class FoodsServiceImpl implements FoodsService{
     @Override
     public List<Object[]> cateStats() {
         return this.foodsRepository.cateStats();
+    }
+
+    @Override
+    public List<Object[]> revenueStats(String kw, Date fromDate, Date toDate) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 }

@@ -5,6 +5,7 @@
 package com.ndt.repository;
 
 import com.ndt.pojo.Foods;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -18,4 +19,5 @@ public interface FoodsRepository {
     boolean addFood(Foods f);
     boolean deleteFood(int id);
     List<Object[]> cateStats();
+    List<Object[]> revenueStats(String kw, Date fromDate, Date toDate);
 }

@@ -12,6 +12,9 @@
     <class>com.ndt.pojo.OrderDetails</class>
     <class>com.ndt.pojo.Payment</class>
     <class>com.ndt.pojo.Orders</class>
+    <class>com.ndt.pojo.Receipt</class>
+    <class>com.ndt.pojo.Order</class>
+    <class>com.ndt.pojo.ReceiptDetail</class>
     <exclude-unlisted-classes>false</exclude-unlisted-classes>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/fooddb?zeroDateTimeBehavior=CONVERT_TO_NULL"/>

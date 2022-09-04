@@ -6,6 +6,9 @@ package com.ndt.repository.impl;
 
 import com.ndt.pojo.Category;
 import com.ndt.pojo.Foods;
+import com.ndt.pojo.Order;
+import com.ndt.pojo.Receipt;
+import com.ndt.pojo.ReceiptDetail;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -21,6 +24,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.stereotype.Repository;
 import com.ndt.repository.FoodsRepository;
+import java.util.Date;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -31,11 +35,12 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 @PropertySource("classpath:databases.properties")
 public class FoodsRepositoryImpl implements FoodsRepository {
+
     @Autowired
     private LocalSessionFactoryBean sessionFactory;
     @Autowired
     private Environment env;
-    
+
     @Override
     public List<Foods> getFood(Map<String, String> params, int page) {
         Session session = this.sessionFactory.getObject().getCurrentSession();
@@ -95,14 +100,14 @@ public class FoodsRepositoryImpl implements FoodsRepository {
     public int countFood() {
         Session session = this.sessionFactory.getObject().getCurrentSession();
         Query q = session.createQuery("SELECT COUNT(*) FROM Foods");
-        
+
         return Integer.parseInt(q.getSingleResult().toString());
     }
 
     @Override
     public boolean addFood(Foods f) {
         Session session = this.sessionFactory.getObject().getCurrentSession();
-        
+
         try {
             session.save(f);
             return true;
@@ -127,19 +132,49 @@ public class FoodsRepositoryImpl implements FoodsRepository {
             return false;
         }
     }
-    
+
     @Override
     public List<Object[]> cateStats() {
         Session session = this.sessionFactory.getObject().getCurrentSession();
         CriteriaBuilder b = session.getCriteriaBuilder();
         CriteriaQuery<Object[]> q = b.createQuery(Object[].class);
-        
+
         Root rF = q.from(Foods.class);
         Root rC = q.from(Category.class);
         q.where(b.equal(rF.get("categoryId"), rC.get("id")));
-         
+
         q.multiselect(rC.get("id"), rC.get("categoryName"), b.count(rF.get("id")));
         q.groupBy(rC.get("id"));
+
+        Query query = session.createQuery(q);
+        return query.getResultList();
+    }
+
+    @Override
+    public List<Object[]> revenueStats(String kw, Date fromDate, Date toDate) {
+        Session session = this.sessionFactory.getObject().getCurrentSession();
+        CriteriaBuilder b = session.getCriteriaBuilder();
+        CriteriaQuery<Object[]> q = b.createQuery(Object[].class);
+
+        Root rF = q.from(Foods.class);
+        Root rD = q.from(Receipt.class);
+        Root rR = q.from(ReceiptDetail.class);
+
+        List<Predicate> predicates = new ArrayList<>();
+        predicates.add(b.equal(rR.get("foodId"), rF.get("id")));
+        predicates.add(b.equal(rR.get("receiptId"), rD.get("id")));
+        
+        q.multiselect(rF.get("id"), rF.get("name"),
+                b.sum(b.prod(rR.get("price"), rR.get("amount"))));
+        
+        if (kw != null)
+            predicates.add(b.like(rF.get("name"), kw));
+        
+        if (fromDate != null)
+            predicates.
+        
+        q.where(predicates.toArray(new Predicate[] {}));
+        q.groupBy(rF.get("id"));
         
         Query query = session.createQuery(q);
         return query.getResultList();
