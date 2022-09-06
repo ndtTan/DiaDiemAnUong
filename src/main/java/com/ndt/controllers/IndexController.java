@@ -5,6 +5,7 @@
 package com.ndt.controllers;
 
 import com.ndt.service.CategoryService;
+import com.ndt.service.CommentService;
 import com.ndt.service.FoodsService;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +17,9 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -34,6 +37,8 @@ public class IndexController {
     private CategoryService categoryService;
     @Autowired
     private FoodsService foodsService;
+    @Autowired
+    private CommentService commentService;
     @Autowired
     private Environment env;
 
@@ -53,4 +58,18 @@ public class IndexController {
 
         return "index";
     }
+    
+    @GetMapping("/food/{foodId}")
+    public String foodDetail(Model model, 
+            @PathVariable(value = "foodId") int id) {
+        model.addAttribute("food", this.commentService.getFoodById(id));
+        
+        return "food-detail";
+    }
+    
+//    @GetMapping("/food/{foodId}")
+//    public String productDetails(Model model, @PathVariable(value = "productId") int id) {
+//        model.addAttribute("product", this.foodsService.getFoodById(id));
+//        return "food-detail";
+//    }
 }

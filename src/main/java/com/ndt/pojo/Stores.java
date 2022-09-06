@@ -7,7 +7,6 @@ package com.ndt.pojo;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -34,7 +33,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Stores.findById", query = "SELECT s FROM Stores s WHERE s.id = :id"),
     @NamedQuery(name = "Stores.findByName", query = "SELECT s FROM Stores s WHERE s.name = :name"),
     @NamedQuery(name = "Stores.findByAddress", query = "SELECT s FROM Stores s WHERE s.address = :address"),
-    @NamedQuery(name = "Stores.findByShippingPrice", query = "SELECT s FROM Stores s WHERE s.shippingPrice = :shippingPrice")})
+    @NamedQuery(name = "Stores.findByShipFee", query = "SELECT s FROM Stores s WHERE s.shipFee = :shipFee")})
 public class Stores implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -53,11 +52,9 @@ public class Stores implements Serializable {
     @Size(min = 1, max = 45)
     @Column(name = "address")
     private String address;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "shipping_price")
-    private long shippingPrice;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "storesId")
+    @Column(name = "ship_fee")
+    private Long shipFee;
+    @OneToMany(mappedBy = "storeId")
     private List<Foods> foodsList;
 
     public Stores() {
@@ -67,11 +64,10 @@ public class Stores implements Serializable {
         this.id = id;
     }
 
-    public Stores(Integer id, String name, String address, long shippingPrice) {
+    public Stores(Integer id, String name, String address) {
         this.id = id;
         this.name = name;
         this.address = address;
-        this.shippingPrice = shippingPrice;
     }
 
     public Integer getId() {
@@ -98,12 +94,12 @@ public class Stores implements Serializable {
         this.address = address;
     }
 
-    public long getShippingPrice() {
-        return shippingPrice;
+    public Long getShipFee() {
+        return shipFee;
     }
 
-    public void setShippingPrice(long shippingPrice) {
-        this.shippingPrice = shippingPrice;
+    public void setShipFee(Long shipFee) {
+        this.shipFee = shipFee;
     }
 
     @XmlTransient

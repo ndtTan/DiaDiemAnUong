@@ -1,5 +1,3 @@
-CREATE DATABASE  IF NOT EXISTS `fooddb` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
-USE `fooddb`;
 -- MySQL dump 10.13  Distrib 8.0.30, for Win64 (x86_64)
 --
 -- Host: localhost    Database: fooddb
@@ -42,55 +40,34 @@ INSERT INTO `category` VALUES (1,'Thức Ăn'),(2,'Đồ Uống');
 UNLOCK TABLES;
 
 --
--- Table structure for table `condition_details`
+-- Table structure for table `comments`
 --
 
-DROP TABLE IF EXISTS `condition_details`;
+DROP TABLE IF EXISTS `comments`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `condition_details` (
+CREATE TABLE `comments` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `condition_name` varchar(45) COLLATE utf8mb4_unicode_ci NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  `content` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `cmt_food_id` int NOT NULL,
+  `cmt_user_id` int NOT NULL,
+  `created_date` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_cmt_user_id_idx` (`cmt_user_id`),
+  KEY `fk_cmt_food_id_idx` (`cmt_food_id`),
+  CONSTRAINT `fk_cmt_food_id` FOREIGN KEY (`cmt_food_id`) REFERENCES `foods` (`id`),
+  CONSTRAINT `fk_cmt_user_id` FOREIGN KEY (`cmt_user_id`) REFERENCES `user` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `condition_details`
+-- Dumping data for table `comments`
 --
 
-LOCK TABLES `condition_details` WRITE;
-/*!40000 ALTER TABLE `condition_details` DISABLE KEYS */;
-INSERT INTO `condition_details` VALUES (1,'Còn'),(2,'Hết');
-/*!40000 ALTER TABLE `condition_details` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `customers`
---
-
-DROP TABLE IF EXISTS `customers`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `customers` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `first_name` varchar(45) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `last_name` varchar(45) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `email` varchar(45) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `phone` varchar(10) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `username` varchar(45) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `password` varchar(45) COLLATE utf8mb4_unicode_ci NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `customers`
---
-
-LOCK TABLES `customers` WRITE;
-/*!40000 ALTER TABLE `customers` DISABLE KEYS */;
-/*!40000 ALTER TABLE `customers` ENABLE KEYS */;
+LOCK TABLES `comments` WRITE;
+/*!40000 ALTER TABLE `comments` DISABLE KEYS */;
+INSERT INTO `comments` VALUES (1,'good',1,1,'2022-07-16 13:00:00'),(2,'very good',1,1,'2022-08-16 13:00:00'),(3,'rat ngon',1,1,'2022-05-16 13:00:00');
+/*!40000 ALTER TABLE `comments` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -106,17 +83,14 @@ CREATE TABLE `foods` (
   `price` decimal(10,0) DEFAULT '0',
   `sell_time` datetime DEFAULT NULL,
   `img_food` varchar(200) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `condition_details_id` int NOT NULL,
   `category_id` int NOT NULL,
-  `stores_id` int NOT NULL,
+  `store_id` int DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `fk_condition_details_id_idx` (`condition_details_id`),
   KEY `fk_category_id_idx` (`category_id`) /*!80000 INVISIBLE */,
-  KEY `fk_stores_id_idx` (`stores_id`),
+  KEY `fk_store_id_idx` (`store_id`),
   CONSTRAINT `fk_category_id` FOREIGN KEY (`category_id`) REFERENCES `category` (`id`),
-  CONSTRAINT `fk_condition_details_id` FOREIGN KEY (`condition_details_id`) REFERENCES `condition_details` (`id`) ON UPDATE RESTRICT,
-  CONSTRAINT `fk_stores_id` FOREIGN KEY (`stores_id`) REFERENCES `stores` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  CONSTRAINT `fk_store_id` FOREIGN KEY (`store_id`) REFERENCES `stores` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -125,120 +99,66 @@ CREATE TABLE `foods` (
 
 LOCK TABLES `foods` WRITE;
 /*!40000 ALTER TABLE `foods` DISABLE KEYS */;
-INSERT INTO `foods` VALUES (1,'Cơm Gà',25000,'2022-08-28 16:00:00','https://res.cloudinary.com/ndt1010/image/upload/v1661336253/cld-sample-4.jpg',1,1,1),(2,'Cơm Chả',25000,'2022-08-28 16:00:00','https://res.cloudinary.com/ndt1010/image/upload/v1661336253/cld-sample-4.jpg',1,1,2),(3,'Cơm Sườn',30000,'2022-08-28 16:00:00','https://res.cloudinary.com/ndt1010/image/upload/v1661336253/cld-sample-4.jpg',2,1,2),(4,'Cơm Sườn Trứng',33000,'2022-08-28 16:00:00','https://res.cloudinary.com/ndt1010/image/upload/v1661336253/cld-sample-4.jpg',1,1,1),(5,'Cơm Sườn Bì Chả',35000,'2022-08-28 16:00:00','https://res.cloudinary.com/ndt1010/image/upload/v1661336253/cld-sample-4.jpg',2,1,1),(6,'Cơm Chiên Dương Châu',35000,'2022-08-28 16:00:00','https://res.cloudinary.com/ndt1010/image/upload/v1661336253/cld-sample-4.jpg',2,1,1),(7,'Mì Xào Bò',35000,'2022-08-28 16:00:00','https://res.cloudinary.com/ndt1010/image/upload/v1661336253/cld-sample-4.jpg',2,1,1),(8,'Mì Xào Trứng',35000,'2022-08-28 16:00:00','https://res.cloudinary.com/ndt1010/image/upload/v1661336253/cld-sample-4.jpg',2,1,1),(9,'Cơm Chiên Thái',35000,'2022-08-28 16:00:00','https://res.cloudinary.com/ndt1010/image/upload/v1661336253/cld-sample-4.jpg',2,1,1),(10,'Nui Xào Trứng',35000,'2022-08-28 16:00:00','https://res.cloudinary.com/ndt1010/image/upload/v1661336253/cld-sample-4.jpg',2,1,1);
+INSERT INTO `foods` VALUES (1,'Cơm Gà',25000,'2022-08-28 16:00:00','https://res.cloudinary.com/ndt1010/image/upload/v1661336253/cld-sample-4.jpg',1,1),(2,'Cơm Chả',25000,'2022-08-28 16:00:00','https://res.cloudinary.com/ndt1010/image/upload/v1661336253/cld-sample-4.jpg',1,1),(3,'Cơm Sườn',30000,'2022-08-28 16:00:00','https://res.cloudinary.com/ndt1010/image/upload/v1661336253/cld-sample-4.jpg',1,1),(4,'Cơm Sườn Trứng',33000,'2022-08-28 16:00:00','https://res.cloudinary.com/ndt1010/image/upload/v1661336253/cld-sample-4.jpg',1,2),(5,'Cơm Sườn Bì Chả',35000,'2022-08-28 16:00:00','https://res.cloudinary.com/ndt1010/image/upload/v1661336253/cld-sample-4.jpg',1,1),(7,'Mì Xào Bò',27000,'2022-08-28 16:00:00','https://res.cloudinary.com/ndt1010/image/upload/v1661336253/cld-sample-4.jpg',1,2),(8,'Mì Xào Trứng',25000,'2022-08-28 16:00:00','https://res.cloudinary.com/ndt1010/image/upload/v1661336253/cld-sample-4.jpg',1,2),(9,'Coca Cola',10000,'2022-08-28 16:00:00','https://res.cloudinary.com/ndt1010/image/upload/v1661336253/cld-sample-4.jpg',2,1),(10,'Pepsi',8000,'2022-08-28 16:00:00','https://res.cloudinary.com/ndt1010/image/upload/v1661336253/cld-sample-4.jpg',2,2),(11,'7Up',8000,'2022-08-28 16:00:00','https://res.cloudinary.com/ndt1010/image/upload/v1661336253/cld-sample-4.jpg',2,1),(12,'DrThanh',10000,'2022-08-28 16:00:00','https://res.cloudinary.com/ndt1010/image/upload/v1661336253/cld-sample-4.jpg',2,2);
 /*!40000 ALTER TABLE `foods` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `order_details`
+-- Table structure for table `receipt`
 --
 
-DROP TABLE IF EXISTS `order_details`;
+DROP TABLE IF EXISTS `receipt`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `order_details` (
+CREATE TABLE `receipt` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `sub_total` decimal(10,0) NOT NULL,
-  `amount` int NOT NULL,
-  `order_id` int NOT NULL,
+  `total` decimal(10,0) DEFAULT NULL,
+  `created_date` datetime NOT NULL,
+  `od_user_id` int NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_od_user_id_idx` (`od_user_id`),
+  CONSTRAINT `fk_od_user_id` FOREIGN KEY (`od_user_id`) REFERENCES `user` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `receipt`
+--
+
+LOCK TABLES `receipt` WRITE;
+/*!40000 ALTER TABLE `receipt` DISABLE KEYS */;
+/*!40000 ALTER TABLE `receipt` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `receipt_detail`
+--
+
+DROP TABLE IF EXISTS `receipt_detail`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `receipt_detail` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `price` decimal(10,0) DEFAULT '0',
+  `amount` varchar(45) COLLATE utf8mb4_unicode_ci DEFAULT '0',
   `food_id` int NOT NULL,
+  `receipt_id` int NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `fk_food_id_idx` (`food_id`),
-  KEY `fk_orders_id_idx` (`order_id`),
+  KEY `fk_receipt_id_idx` (`receipt_id`),
+  KEY `fk_receipt_detail_id_idx` (`receipt_id`),
+  KEY `fk_food_id` (`food_id`),
   CONSTRAINT `fk_food_id` FOREIGN KEY (`food_id`) REFERENCES `foods` (`id`),
-  CONSTRAINT `fk_orders_id` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  CONSTRAINT `fk_receipt_detail_id` FOREIGN KEY (`receipt_id`) REFERENCES `receipt` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `order_details`
+-- Dumping data for table `receipt_detail`
 --
 
-LOCK TABLES `order_details` WRITE;
-/*!40000 ALTER TABLE `order_details` DISABLE KEYS */;
-/*!40000 ALTER TABLE `order_details` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `orders`
---
-
-DROP TABLE IF EXISTS `orders`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `orders` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `total` decimal(10,0) NOT NULL,
-  `purchase_date` datetime NOT NULL,
-  `customer_id` int NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `fk_customer_id_idx` (`customer_id`),
-  CONSTRAINT `fk_customer_id` FOREIGN KEY (`customer_id`) REFERENCES `customers` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `orders`
---
-
-LOCK TABLES `orders` WRITE;
-/*!40000 ALTER TABLE `orders` DISABLE KEYS */;
-/*!40000 ALTER TABLE `orders` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `payment`
---
-
-DROP TABLE IF EXISTS `payment`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `payment` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `amount` decimal(10,0) NOT NULL,
-  `payment_method_id` int NOT NULL,
-  `pm_order_id` int NOT NULL,
-  `receive_by` int NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `fk_pm_orders_id_idx` (`pm_order_id`),
-  KEY `fk_receive_by_id_idx` (`receive_by`),
-  KEY `fk_method_id_idx` (`payment_method_id`),
-  CONSTRAINT `fk_method_id` FOREIGN KEY (`payment_method_id`) REFERENCES `payment_method` (`id`),
-  CONSTRAINT `fk_pm_orders_id` FOREIGN KEY (`pm_order_id`) REFERENCES `orders` (`id`),
-  CONSTRAINT `fk_receive_by_id` FOREIGN KEY (`receive_by`) REFERENCES `user` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `payment`
---
-
-LOCK TABLES `payment` WRITE;
-/*!40000 ALTER TABLE `payment` DISABLE KEYS */;
-/*!40000 ALTER TABLE `payment` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `payment_method`
---
-
-DROP TABLE IF EXISTS `payment_method`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `payment_method` (
-  `id` int NOT NULL,
-  `method` varchar(45) COLLATE utf8mb4_unicode_ci NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `payment_method`
---
-
-LOCK TABLES `payment_method` WRITE;
-/*!40000 ALTER TABLE `payment_method` DISABLE KEYS */;
-/*!40000 ALTER TABLE `payment_method` ENABLE KEYS */;
+LOCK TABLES `receipt_detail` WRITE;
+/*!40000 ALTER TABLE `receipt_detail` DISABLE KEYS */;
+/*!40000 ALTER TABLE `receipt_detail` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -252,7 +172,7 @@ CREATE TABLE `stores` (
   `id` int NOT NULL AUTO_INCREMENT,
   `name` varchar(45) COLLATE utf8mb4_unicode_ci NOT NULL,
   `address` varchar(45) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `shipping_price` decimal(10,0) NOT NULL,
+  `ship_fee` decimal(10,0) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -263,7 +183,7 @@ CREATE TABLE `stores` (
 
 LOCK TABLES `stores` WRITE;
 /*!40000 ALTER TABLE `stores` DISABLE KEYS */;
-INSERT INTO `stores` VALUES (1,'Cơm OU','Nguyễn Kiệm',15000),(2,'Cơm BC','Nguyễn Thái Sơn',10000);
+INSERT INTO `stores` VALUES (1,'Cơm OU','',NULL),(2,'Cơm BC','',NULL);
 /*!40000 ALTER TABLE `stores` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -281,10 +201,11 @@ CREATE TABLE `user` (
   `email` varchar(45) COLLATE utf8mb4_unicode_ci NOT NULL,
   `phone` varchar(10) COLLATE utf8mb4_unicode_ci NOT NULL,
   `username` varchar(45) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `password` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `password` varchar(45) COLLATE utf8mb4_unicode_ci NOT NULL,
   `user_role` varchar(10) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `active` bit(1) DEFAULT b'1',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -293,6 +214,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
+INSERT INTO `user` VALUES (1,'Tan','Nguyen','aaa@','012345678','ndt','123','ROLE_ADMIN',_binary '');
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -305,4 +227,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-09-02 20:40:59
+-- Dump completed on 2022-09-06 19:00:09

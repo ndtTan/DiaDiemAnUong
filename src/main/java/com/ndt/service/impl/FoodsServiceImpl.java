@@ -6,6 +6,7 @@ package com.ndt.service.impl;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
+import com.ndt.pojo.Comments;
 import com.ndt.pojo.Foods;
 import com.ndt.repository.FoodsRepository;
 import com.ndt.service.FoodsService;
@@ -57,13 +58,19 @@ public class FoodsServiceImpl implements FoodsService{
         return this.foodsRepository.deleteFood(id);
     }
 
-    @Override
-    public List<Object[]> cateStats() {
-        return this.foodsRepository.cateStats();
-    }
+//    @Override
+//    public List<Object[]> cateStats() {
+//        return this.foodsRepository.cateStats();
+//    }
 
-    @Override
-    public List<Object[]> revenueStats(String kw, Date fromDate, Date toDate) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
+//    @Override
+//    public List<Object[]> revenueStats(String kw, Date fromDate, Date toDate) {
+//        return this.foodsRepository.revenueStats(kw, fromDate, toDate);
+//    }
+
+
+//    @Override
+//    public Comments addComment(String content, int foodId) {
+//        return this.foodsRepository.addComment(content, foodId);
+//    }
 }

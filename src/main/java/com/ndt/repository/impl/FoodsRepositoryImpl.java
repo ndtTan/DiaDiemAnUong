@@ -5,8 +5,8 @@
 package com.ndt.repository.impl;
 
 import com.ndt.pojo.Category;
+import com.ndt.pojo.Comments;
 import com.ndt.pojo.Foods;
-import com.ndt.pojo.Order;
 import com.ndt.pojo.Receipt;
 import com.ndt.pojo.ReceiptDetail;
 import java.util.ArrayList;
@@ -57,7 +57,7 @@ public class FoodsRepositoryImpl implements FoodsRepository {
                         String.format("%%%s%%", kw));
                 predicates.add(p);
             }
-
+            
             String fp = params.get("fromPrice");
             if (fp != null) {
                 Predicate p = b.greaterThanOrEqualTo(root.get("price").as(Long.class),
@@ -133,50 +133,66 @@ public class FoodsRepositoryImpl implements FoodsRepository {
         }
     }
 
-    @Override
-    public List<Object[]> cateStats() {
-        Session session = this.sessionFactory.getObject().getCurrentSession();
-        CriteriaBuilder b = session.getCriteriaBuilder();
-        CriteriaQuery<Object[]> q = b.createQuery(Object[].class);
+//    @Override
+//    public List<Object[]> cateStats() {
+//        Session session = this.sessionFactory.getObject().getCurrentSession();
+//        CriteriaBuilder b = session.getCriteriaBuilder();
+//        CriteriaQuery<Object[]> q = b.createQuery(Object[].class);
+//
+//        Root rF = q.from(Foods.class);
+//        Root rC = q.from(Category.class);
+//        q.where(b.equal(rF.get("categoryId"), rC.get("id")));
+//
+//        q.multiselect(rC.get("id"), rC.get("categoryName"), b.count(rF.get("id")));
+//        q.groupBy(rC.get("id"));
+//
+//        Query query = session.createQuery(q);
+//        return query.getResultList();
+//    }
+//
+//    @Override
+//    public List<Object[]> revenueStats(String kw, Date fromDate, Date toDate) {
+//        Session session = this.sessionFactory.getObject().getCurrentSession();
+//        CriteriaBuilder b = session.getCriteriaBuilder();
+//        CriteriaQuery<Object[]> q = b.createQuery(Object[].class);
+//
+//        Root rF = q.from(Foods.class);
+//        Root rR = q.from(Receipt.class);
+//        Root rD = q.from(ReceiptDetail.class);
+//
+//        List<Predicate> predicates = new ArrayList<>();
+//        predicates.add(b.equal(rD.get("foodId"), rF.get("id")));
+//        predicates.add(b.equal(rD.get("receiptId"), rR.get("id")));
+//        
+//        q.multiselect(rF.get("id"), rF.get("name"),
+//                b.sum(b.prod(rD.get("price"), rD.get("amount"))));
+//        
+//        if (kw != null)
+//            predicates.add(b.like(rF.get("name"), kw));
+//        
+//        if (fromDate != null)
+//            predicates.add(b.greaterThanOrEqualTo(rR.get("createDate"), fromDate));
+//        
+//        if (toDate != null)
+//            predicates.add(b.lessThanOrEqualTo(rR.get("createDate"), toDate));
+//        
+//        q.where(predicates.toArray(new Predicate[] {}));
+//        q.groupBy(rF.get("id"));
+//        
+//        Query query = session.createQuery(q);
+//        return query.getResultList();
+//    }
 
-        Root rF = q.from(Foods.class);
-        Root rC = q.from(Category.class);
-        q.where(b.equal(rF.get("categoryId"), rC.get("id")));
-
-        q.multiselect(rC.get("id"), rC.get("categoryName"), b.count(rF.get("id")));
-        q.groupBy(rC.get("id"));
-
-        Query query = session.createQuery(q);
-        return query.getResultList();
-    }
-
-    @Override
-    public List<Object[]> revenueStats(String kw, Date fromDate, Date toDate) {
-        Session session = this.sessionFactory.getObject().getCurrentSession();
-        CriteriaBuilder b = session.getCriteriaBuilder();
-        CriteriaQuery<Object[]> q = b.createQuery(Object[].class);
-
-        Root rF = q.from(Foods.class);
-        Root rD = q.from(Receipt.class);
-        Root rR = q.from(ReceiptDetail.class);
-
-        List<Predicate> predicates = new ArrayList<>();
-        predicates.add(b.equal(rR.get("foodId"), rF.get("id")));
-        predicates.add(b.equal(rR.get("receiptId"), rD.get("id")));
-        
-        q.multiselect(rF.get("id"), rF.get("name"),
-                b.sum(b.prod(rR.get("price"), rR.get("amount"))));
-        
-        if (kw != null)
-            predicates.add(b.like(rF.get("name"), kw));
-        
-        if (fromDate != null)
-            predicates.
-        
-        q.where(predicates.toArray(new Predicate[] {}));
-        q.groupBy(rF.get("id"));
-        
-        Query query = session.createQuery(q);
-        return query.getResultList();
-    }
+//
+//    @Override
+//    public Comments addComment(String content, int foodId) {
+//        Session session = this.sessionFactory.getObject().getCurrentSession();
+//        Comments c = new Comments();
+//        c.setContent(content);
+//        c.setCmtFoodId(this.getFoodById(foodId));
+//        
+//        session.save(c);
+//        
+//        return c;
+//    }
 }

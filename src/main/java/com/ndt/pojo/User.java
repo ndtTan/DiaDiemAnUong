@@ -38,11 +38,9 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "User.findByPhone", query = "SELECT u FROM User u WHERE u.phone = :phone"),
     @NamedQuery(name = "User.findByUsername", query = "SELECT u FROM User u WHERE u.username = :username"),
     @NamedQuery(name = "User.findByPassword", query = "SELECT u FROM User u WHERE u.password = :password"),
-    @NamedQuery(name = "User.findByUserRole", query = "SELECT u FROM User u WHERE u.userRole = :userRole")})
+    @NamedQuery(name = "User.findByUserRole", query = "SELECT u FROM User u WHERE u.userRole = :userRole"),
+    @NamedQuery(name = "User.findByActive", query = "SELECT u FROM User u WHERE u.active = :active")})
 public class User implements Serializable {
-
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "odUserId")
-    private List<Receipt> receiptList;
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -79,7 +77,7 @@ public class User implements Serializable {
     private String username;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 100)
+    @Size(min = 1, max = 45)
     @Column(name = "password")
     private String password;
     @Basic(optional = false)
@@ -87,6 +85,12 @@ public class User implements Serializable {
     @Size(min = 1, max = 10)
     @Column(name = "user_role")
     private String userRole;
+    @Column(name = "active")
+    private Boolean active;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "cmtUserId")
+    private List<Comments> commentsList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "odUserId")
+    private List<Receipt> receiptList;
 
     public User() {
     }
@@ -170,6 +174,32 @@ public class User implements Serializable {
         this.userRole = userRole;
     }
 
+    public Boolean getActive() {
+        return active;
+    }
+
+    public void setActive(Boolean active) {
+        this.active = active;
+    }
+
+    @XmlTransient
+    public List<Comments> getCommentsList() {
+        return commentsList;
+    }
+
+    public void setCommentsList(List<Comments> commentsList) {
+        this.commentsList = commentsList;
+    }
+
+    @XmlTransient
+    public List<Receipt> getReceiptList() {
+        return receiptList;
+    }
+
+    public void setReceiptList(List<Receipt> receiptList) {
+        this.receiptList = receiptList;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -193,15 +223,6 @@ public class User implements Serializable {
     @Override
     public String toString() {
         return "com.ndt.pojo.User[ id=" + id + " ]";
-    }
-
-    @XmlTransient
-    public List<Receipt> getReceiptList() {
-        return receiptList;
-    }
-
-    public void setReceiptList(List<Receipt> receiptList) {
-        this.receiptList = receiptList;
     }
     
 }

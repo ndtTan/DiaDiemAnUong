@@ -36,22 +36,18 @@ public class FoodController {
     }
     
     @PostMapping("/food")
-    public String add(Model model, @ModelAttribute(value = "food") @Valid Foods f ,
+    public String add(@ModelAttribute(value = "food") @Valid Foods f ,
             BindingResult r) {
         if (!r.hasErrors()) {
             if (this.foodsService.addFood(f) == true)
                 return "redirect:/";
             else 
-                model.addAttribute("errMsg", "Có sự cố");
+                return "food";
         }
         
         
         return "food";
     }
     
-    @GetMapping("/cate-stats")
-    public String cateStats(Model model) {
-        model.addAttribute("stats", this.foodsService.cateStats());
-        return "cate-stats";
-    }
+    
 }

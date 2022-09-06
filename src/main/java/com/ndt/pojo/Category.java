@@ -4,7 +4,6 @@
  */
 package com.ndt.pojo;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Basic;
@@ -37,7 +36,7 @@ import javax.xml.bind.annotation.XmlTransient;
 public class Category implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    @Id 
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "id")

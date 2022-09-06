@@ -6,7 +6,6 @@ package com.ndt.pojo;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.Basic;
@@ -49,14 +48,6 @@ import org.springframework.web.multipart.MultipartFile;
     @NamedQuery(name = "Foods.findByImgFood", query = "SELECT f FROM Foods f WHERE f.imgFood = :imgFood")})
 public class Foods implements Serializable {
 
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "store_id")
-    private int storeId;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "foodId")
-    private List<ReceiptDetail> receiptDetailList;
-
-
     /**
      * @return the file
      */
@@ -92,18 +83,20 @@ public class Foods implements Serializable {
     @Size(max = 200)
     @Column(name = "img_food")
     private String imgFood;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "cmtFoodId")
+    @JsonIgnore
+    private List<Comments> commentsList;
     @JoinColumn(name = "category_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     @JsonIgnore
     private Category categoryId;
-    @JoinColumn(name = "condition_details_id", referencedColumnName = "id")
-    @ManyToOne(optional = false)
+    @JoinColumn(name = "store_id", referencedColumnName = "id")
+    @ManyToOne
     @JsonIgnore
-    private ConditionDetails conditionDetailsId;
-    @JoinColumn(name = "stores_id", referencedColumnName = "id")
-    @ManyToOne(optional = false)
+    private Stores storeId;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "foodId")
     @JsonIgnore
-    private Stores storesId;
+    private List<ReceiptDetail> receiptDetailList;
     @Transient
     private MultipartFile file;
 
@@ -159,6 +152,15 @@ public class Foods implements Serializable {
         this.imgFood = imgFood;
     }
 
+    @XmlTransient
+    public List<Comments> getCommentsList() {
+        return commentsList;
+    }
+
+    public void setCommentsList(List<Comments> commentsList) {
+        this.commentsList = commentsList;
+    }
+
     public Category getCategoryId() {
         return categoryId;
     }
@@ -167,20 +169,21 @@ public class Foods implements Serializable {
         this.categoryId = categoryId;
     }
 
-    public ConditionDetails getConditionDetailsId() {
-        return conditionDetailsId;
+    public Stores getStoreId() {
+        return storeId;
     }
 
-    public void setConditionDetailsId(ConditionDetails conditionDetailsId) {
-        this.conditionDetailsId = conditionDetailsId;
+    public void setStoreId(Stores storeId) {
+        this.storeId = storeId;
     }
 
-    public Stores getStoresId() {
-        return storesId;
+    @XmlTransient
+    public List<ReceiptDetail> getReceiptDetailList() {
+        return receiptDetailList;
     }
 
-    public void setStoresId(Stores storesId) {
-        this.storesId = storesId;
+    public void setReceiptDetailList(List<ReceiptDetail> receiptDetailList) {
+        this.receiptDetailList = receiptDetailList;
     }
 
     @Override
@@ -207,24 +210,5 @@ public class Foods implements Serializable {
     public String toString() {
         return "com.ndt.pojo.Foods[ id=" + id + " ]";
     }
-
-    public int getStoreId() {
-        return storeId;
-    }
-
-    public void setStoreId(int storeId) {
-        this.storeId = storeId;
-    }
-
-    @XmlTransient
-    public List<ReceiptDetail> getReceiptDetailList() {
-        return receiptDetailList;
-    }
-
-    public void setReceiptDetailList(List<ReceiptDetail> receiptDetailList) {
-        this.receiptDetailList = receiptDetailList;
-    }
-
-    
     
 }
